@@ -162,5 +162,5 @@ jobs:
           !(endsWith(github.ref, '-rc') || endsWith(github.ref, '-dev') || endsWith(github.ref, '-prerelease')) &&
           github.repository == 'Azure/azure-functions-dapr-extension'
         run: |
-          az storage blob upload-batch -s ${{ env.NUPKG_OUTDIR }}/* -d "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azure-functions-dapr-extension/dotnet/${{ env.REL_VERSION }}/" --account-name azuresdkpartnerdrops --auth-mode login
-          az storage blob upload-batch -s ${{ env.MAVEN_OUTDIR }}/* -d "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azure-functions-dapr-extension/java/${{ env.REL_VERSION }}/" --account-name azuresdkpartnerdrops --auth-mode login
+          az storage blob upload-batch -s ${{ env.NUPKG_OUTDIR }}/* -d "drops/azure-functions-dapr-extension/dotnet/${{ env.REL_VERSION }}/" --account-name azuresdkpartnerdrops --auth-mode login
+          az storage blob upload-batch -s ${{ env.MAVEN_OUTDIR }}/* -d "drops/azure-functions-dapr-extension/java/${{ env.REL_VERSION }}/" --account-name azuresdkpartnerdrops --auth-mode login
