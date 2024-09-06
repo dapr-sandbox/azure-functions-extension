@@ -23,6 +23,7 @@ jobs:
     environment: production
     permissions:
       contents: write
+      id-token: write
     env:
       APP_REGISTRY: ${{ secrets.DOCKER_REGISTRY_URL }}/${{ secrets.DOCKER_REGISTRY_PATH }}
       CONFIGURATION: Release
