@@ -20,6 +20,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
     permissions:
       contents: write
     env:
@@ -144,17 +145,21 @@ jobs:
           --notes "Release Azure Functions Dapr Extension v${REL_VERSION}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to azuresdkpartnerdrops
+        if: |
+          startsWith(github.ref, 'refs/tags/v') &&
+          !(endsWith(github.ref, '-rc') || endsWith(github.ref, '-dev') || endsWith(github.ref, '-prerelease')) &&
+          github.repository == 'Azure/azure-functions-dapr-extension'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZ_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZ_TENANT_ID }}
+          subscription-id: ${{ secrets.AZ_SUBSCRIPTION_ID }}
       - name: Upload NuGet and Maven packages to Azure blob storage
         if: |
           startsWith(github.ref, 'refs/tags/v') &&
           !(endsWith(github.ref, '-rc') || endsWith(github.ref, '-dev') || endsWith(github.ref, '-prerelease')) &&
           github.repository == 'Azure/azure-functions-dapr-extension'
         run: |
-          # Install azcopy
-          wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1
-
-          # Upload nuget packages to Azure blob storage
-          export AZCOPY_SPA_CLIENT_SECRET=${{ secrets.AZCOPY_SPA_CLIENT_SECRET }}
-          ./azcopy login --service-principal --application-id ${{ secrets.AZCOPY_SPA_APPLICATION_ID }} --tenant-id=${{ secrets.AZCOPY_TENANT_ID }}
-          ./azcopy copy "${{ env.NUPKG_OUTDIR }}/*" "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azure-functions-dapr-extension/dotnet/${{ env.REL_VERSION }}/"
-          ./azcopy copy "${{ env.MAVEN_OUTDIR }}/*" "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azure-functions-dapr-extension/java/${{ env.REL_VERSION }}/" --recursive=true
+          az storage blob upload -f "${{ env.NUPKG_OUTDIR }}/*" -c "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azure-functions-dapr-extension/dotnet/${{ env.REL_VERSION }}/" --account-name azuresdkpartnerdrops --auth-mode login
+          az storage blob upload -f "${{ env.MAVEN_OUTDIR }}/*" -c "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azure-functions-dapr-extension/java/${{ env.REL_VERSION }}/" --account-name azuresdkpartnerdrops --auth-mode login
