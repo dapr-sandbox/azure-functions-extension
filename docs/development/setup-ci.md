@@ -20,8 +20,9 @@ A GitHub account.
 | DOCKER_REGISTRY_PATH | Path to store Docker images, required for uploading sample image, e.g. `samples/dotnet` |
 | DOCKER_REGISTRY_ID | Username for Docker registry, required for uploading sample image |
 | DOCKER_REGISTRY_PASS | Password for Docker registry, required for uploading sample image |
-| AZCOPY_SPA_APPLICATION_ID | Service principal application ID for AzCopy, required for uploading NuGet and Maven artifacts |
-| AZCOPY_SPA_CLIENT_SECRET | Service principal client secret for AzCopy, required for uploading NuGet and Maven artifacts |
+| AZ_CLIENT_ID | Azure client id provided by partner release team |
+| AZ_TENANT_ID | Azure tenant id provided by partner release team |
+| AZ_SUBSCRIPTION_ID | Azure subscription id provided by partner release team |
 | AZCOPY_TENANT_ID | Tenant ID used by AzCopy to authenticate, required for uploading NuGet and Maven artifacts |
 | GITHUB_TOKEN | GitHub token, required for creating release |
 | CODECOV_TOKEN | [Codecov token](#generate-codecov_token), required for uploading code coverage results |
